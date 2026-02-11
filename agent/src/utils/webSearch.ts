@@ -2,7 +2,7 @@ import { env } from "../shared/env";
 import { webSearchResultSchema, webSearchResultsSchema } from "./schemas";
 
 // safeText....
-async function safeText(res: Response) {
+export async function safeText(res: Response) {
   try {
     return await res.json();
   } catch (error) {
