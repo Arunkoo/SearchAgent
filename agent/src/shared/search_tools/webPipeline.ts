@@ -1,7 +1,10 @@
-import { RunnableLambda } from "@langchain/core/runnables";
+import { RunnableLambda, RunnableSequence } from "@langchain/core/runnables";
 import { webSearch } from "../../utils/webSearch";
 import { openUrl } from "../../utils/openUrl";
 import { summarize } from "../../utils/summarize";
+import { candidate } from "./types";
+import { getChatModel } from "../model";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 const setTopResults = 5;
 
@@ -69,3 +72,75 @@ export const openAndSummarizeStep = RunnableLambda.from(
     };
   },
 );
+
+//compose step....
+
+export const stepCompose = RunnableLambda.from(
+  async (input: {
+    q: string;
+    pageSummaries: Array<{ url: string; summary: string }>;
+    mode: "web" | "direct";
+    fallback: "no-results" | "snippets" | "none";
+  }): Promise<candidate> => {
+    const model = getChatModel({ temperature: 0.2 });
+    //if no data reterived from web than just return llm messgae;;
+    if (!input.pageSummaries || input.pageSummaries.length === 0) {
+      const directResFromModel = await model.invoke([
+        new SystemMessage(
+          [
+            "You answer briefly and clearly for beginners",
+            "If unsure, say no gracefully",
+          ].join("\n"),
+        ),
+        new HumanMessage(input.q),
+      ]);
+      //validation and transformation....
+      const directAns = (
+        typeof directResFromModel.content === "string"
+          ? directResFromModel.content
+          : String(directResFromModel.content)
+      ).trim();
+
+      return {
+        answer: directAns,
+        sources: [],
+        mode: "direct",
+      };
+    }
+
+    // if data retirvied....
+    const res = await model.invoke([
+      new SystemMessage(
+        [
+          "You concisely answer questions using provided page summaries",
+          "Rules:",
+          "- Be accurate and neutral",
+          "- 5-8 sentences max",
+          "-Use only the provided summaries; do not invent new facts",
+        ].join("\n"),
+      ),
+      new HumanMessage(
+        [
+          `Question: ${input.q}`,
+          "Summaries:",
+          JSON.stringify(input.pageSummaries, null, 2),
+        ].join("\n"),
+      ),
+    ]);
+
+    const finalAns =
+      typeof res.content === "string" ? res.content : String(res.content);
+    const extractSources = input.pageSummaries.map((x) => x.url);
+    return {
+      answer: finalAns,
+      sources: extractSources,
+      mode: "web",
+    };
+  },
+);
+
+export const webPipeline = RunnableSequence.from([
+  webSearchStep,
+  openAndSummarizeStep,
+  stepCompose,
+]);
