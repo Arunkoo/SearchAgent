@@ -32,3 +32,10 @@ export const SearchInputSchema = z.object({
 });
 
 export type SearchInput = z.infer<typeof SearchInputSchema>;
+
+export const SearchAnswerSchema = z.object({
+  answer: z.string().min(1),
+  sources: z.array(z.url()).default([]),
+});
+
+export type SearchAnswer = z.infer<typeof SearchAnswerSchema>;

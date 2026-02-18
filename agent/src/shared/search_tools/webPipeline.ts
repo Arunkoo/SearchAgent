@@ -139,7 +139,7 @@ export const stepCompose = RunnableLambda.from(
   },
 );
 
-export const webPipeline = RunnableSequence.from([
+export const webPath = RunnableSequence.from([
   webSearchStep,
   openAndSummarizeStep,
   stepCompose,
