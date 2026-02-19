@@ -2,8 +2,8 @@
 
 import { RunnableLambda } from "@langchain/core/runnables";
 import { candidate } from "./types";
-import { SearchAnswerSchema } from "../../utils/schemas";
-import { getChatModel } from "../model";
+import { SearchAnswerSchema } from "../utils/schemas";
+import { getChatModel } from "../shared/model";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export const finalValidation = RunnableLambda.from(
@@ -17,6 +17,8 @@ export const finalValidation = RunnableLambda.from(
 
     //if again the structure of data is not valid than repair one shot..
     const oneShotRepair = await repairSearchAns(finalDraft);
+    const parsed2 = SearchAnswerSchema.safeParse(oneShotRepair);
+    if (parsed2.success) return parsed2.data;
   },
 );
 
@@ -47,9 +49,19 @@ async function repairSearchAns(
   ).trim();
   const json = extractJson(text);
   return {
-    answer: String(),
-    sources: [],
+    answer: String(json?.answer ?? "").trim(),
+    sources: Array.isArray(json?.sources) ? json?.sources?.map(String) : [],
   };
 }
 
-function extractJson(input: string) {}
+function extractJson(input: string) {
+  const start = input.indexOf("{");
+  const end = input.indexOf("}");
+  if (start === -1 || end === -1 || end <= start) return {};
+
+  try {
+    return JSON.parse(input.slice(start, end + 1));
+  } catch {
+    return {};
+  }
+}

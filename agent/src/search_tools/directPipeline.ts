@@ -1,6 +1,6 @@
 import { RunnableLambda } from "@langchain/core/runnables";
 import { candidate } from "./types";
-import { getChatModel } from "../model";
+import { getChatModel } from "../shared/model";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export const directPath = RunnableLambda.from(
