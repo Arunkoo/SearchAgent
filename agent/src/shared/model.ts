@@ -16,20 +16,20 @@ export function getChatModel(opts: ModelOpts): BaseChatModel {
   switch (env.MODEL_PROVIDER) {
     case "gemini":
       return new ChatGoogleGenerativeAI({
-        apiKey: env.GOOGLE_API_KEY,
+        ...(env.GOOGLE_API_KEY && { apiKey: env.GOOGLE_API_KEY }),
         model: env.GEMINI_MODEL,
         temperature: temp,
       });
     case "groq":
       return new ChatGroq({
-        apiKey: env.GROQ_API_KEY,
+        ...(env.GROQ_API_KEY && { apiKey: env.GROQ_API_KEY }),
         model: env.GROQ_MODEL,
         temperature: temp,
       });
     case "openai":
     default:
       return new ChatOpenAI({
-        apiKey: env.OPEN_API_KEY,
+        ...(env.OPEN_API_KEY && { apiKey: env.OPEN_API_KEY }),
         model: env.OPENAI_MODEL,
         temperature: temp,
       });

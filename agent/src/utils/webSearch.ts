@@ -18,7 +18,7 @@ async function searchTavilyUtils(query: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Auhthorization: `Bearer ${env.TAVILY_API_KEY}`,
+      Authorization: `Bearer ${env.TAVILY_API_KEY}`,
     },
     body: JSON.stringify({
       query,
@@ -34,7 +34,7 @@ async function searchTavilyUtils(query: string) {
     throw new Error(`Tavily Error, ${response.status}-${text}`);
   }
   const data = await response.json();
-  const result = Array.isArray(data?.result) ? data.result : [];
+  const result = Array.isArray(data?.results) ? data.results : (Array.isArray(data?.result) ? data.result : []);
 
   const normalized = result.slice(0, 5).map((r: any) =>
     webSearchResultSchema.parse({

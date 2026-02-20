@@ -3,7 +3,7 @@ import { z } from "zod";
 const envSchema = z.object({
   PORT: z.string().default("5000"),
   ALLOWED_ORIGIN: z.url().default("http://localhost:5000"),
-  MODEL_PROVIDER: z.enum(["openai", "gemini", "groq"]).default("groq"),
+  MODEL_PROVIDER: z.enum(["openai", "gemini", "groq"]).default("openai"),
   OPEN_API_KEY: z.string().optional(),
   GOOGLE_API_KEY: z.string().optional(),
   GROQ_API_KEY: z.string().optional(),

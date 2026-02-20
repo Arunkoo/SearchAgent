@@ -26,6 +26,9 @@ export const patterns: RegExp[] = [
   // Company metrics
   /\b(net worth|revenue|profit|earnings)\b/i,
 
+  // Rankings / lists
+  /\b(top|richest|wealthiest|best|worst|ranking|rank|list)\b/i,
+
   // Economic indicators
   /\b(gdp|inflation|interest rate|repo rate|cpi)\b/i,
 
