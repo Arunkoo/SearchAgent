@@ -1,9 +1,9 @@
 // answer , sources
 
 import { RunnableLambda } from "@langchain/core/runnables";
-import { candidate } from "./types";
-import { SearchAnswerSchema } from "../utils/schemas";
-import { getChatModel } from "../shared/model";
+import { candidate } from "./types.js";
+import { SearchAnswerSchema } from "../utils/schemas.js";
+import { getChatModel } from "../shared/model.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export const finalValidation = RunnableLambda.from(

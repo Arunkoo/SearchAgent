@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { SearchInputSchema } from "../utils/schemas";
-import { runSearch } from "../search_tools/searchChain";
+import { SearchInputSchema } from "../utils/schemas.js";
+import { runSearch } from "../search_tools/searchChain.js";
 
 export const searchRouter = Router();
 

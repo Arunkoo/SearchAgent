@@ -1,9 +1,9 @@
 import { RunnableLambda, RunnableSequence } from "@langchain/core/runnables";
-import { webSearch } from "../utils/webSearch";
-import { openUrl } from "../utils/openUrl";
-import { summarize } from "../utils/summarize";
-import { candidate } from "./types";
-import { getChatModel } from "../shared/model";
+import { webSearch } from "../utils/webSearch.js";
+import { openUrl } from "../utils/openUrl.js";
+import { summarize } from "../utils/summarize.js";
+import { candidate } from "./types.js";
+import { getChatModel } from "../shared/model.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 const setTopResults = 5;

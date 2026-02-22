@@ -1,7 +1,6 @@
-import { OpenUrlOutputSchema } from "./schemas";
-import { safeText } from "./webSearch";
+import { OpenUrlOutputSchema } from "./schemas.js";
+import { safeText } from "./webSearch.js";
 import { convert } from "html-to-text";
-
 
 export async function openUrl(url: string) {
   const normalizedUrl = validateUrl(url);
@@ -14,7 +13,9 @@ export async function openUrl(url: string) {
   });
   if (!res.ok) {
     const body = await safeText(res);
-    throw new Error(`OpenUrl failed ${res.status}-${body.slice(0, 200)}`);
+    throw new Error(
+      `OpenUrl failed ${res.status}-${String(body).slice(0, 200)}`,
+    );
   }
   const contentType = res.headers.get("content-type") ?? "";
 

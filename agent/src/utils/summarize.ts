@@ -1,6 +1,6 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { getChatModel } from "../shared/model";
-import { SummarizeInputSchema, SummarizeOutputSchema } from "./schemas";
+import { getChatModel } from "../shared/model.js";
+import { SummarizeInputSchema, SummarizeOutputSchema } from "./schemas.js";
 
 function clip(s: string, maxChars: number) {
   return s.length > maxChars ? s.slice(0, maxChars) : s;

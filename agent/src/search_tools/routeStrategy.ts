@@ -1,6 +1,6 @@
 import { RunnableLambda } from "@langchain/core/runnables";
-import { patterns } from "./types";
-import { SearchInputSchema } from "../utils/schemas";
+import { patterns } from "./types.js";
+import { SearchInputSchema } from "../utils/schemas.js";
 
 export function routeStrategy(q: string): "web" | "direct" {
   const trimmedQuery = q.toLowerCase().trim();

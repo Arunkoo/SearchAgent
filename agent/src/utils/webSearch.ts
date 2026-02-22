@@ -1,5 +1,5 @@
-import { env } from "../shared/env";
-import { webSearchResultSchema, webSearchResultsSchema } from "./schemas";
+import { env } from "../shared/env.js";
+import { webSearchResultSchema, webSearchResultsSchema } from "./schemas.js";
 
 // safeText....
 export async function safeText(res: Response) {
@@ -33,8 +33,12 @@ async function searchTavilyUtils(query: string) {
     const text = await safeText(response);
     throw new Error(`Tavily Error, ${response.status}-${text}`);
   }
-  const data = await response.json();
-  const result = Array.isArray(data?.results) ? data.results : (Array.isArray(data?.result) ? data.result : []);
+  const data = (await response.json()) as any;
+  const result = Array.isArray(data?.results)
+    ? data.results
+    : Array.isArray(data?.result)
+      ? data.result
+      : [];
 
   const normalized = result.slice(0, 5).map((r: any) =>
     webSearchResultSchema.parse({

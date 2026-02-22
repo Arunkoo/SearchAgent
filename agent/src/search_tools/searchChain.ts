@@ -1,9 +1,9 @@
 import { RunnableBranch, RunnableSequence } from "@langchain/core/runnables";
-import { webPath } from "./webPipeline";
-import { directPath } from "./directPipeline";
-import { routerStep } from "./routeStrategy";
-import { finalValidation } from "./finalValidate";
-import { SearchInput } from "../utils/schemas";
+import { webPath } from "./webPipeline.js";
+import { directPath } from "./directPipeline.js";
+import { routerStep } from "./routeStrategy.js";
+import { finalValidation } from "./finalValidate.js";
+import { SearchInput } from "../utils/schemas.js";
 
 const branch = RunnableBranch.from<{ q: string; mode: "web" | "direct" }, any>([
   [(input) => input.mode === "web", webPath],
