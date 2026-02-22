@@ -1,21 +1,20 @@
-import express from "express";
 import "dotenv/config";
+import express from "express";
 import cors from "cors";
 import { searchRouter } from "./routes/search_lcel.js";
+
 const app = express();
 
-app.use(express.json());
+const allowedOrigin = process.env.ALLOWED_ORIGIN; // set in Render
+
 app.use(
   cors({
     origin: (origin, cb) => {
-      const allowed = process.env.ALLOWED_ORIGIN;
-
-      // allow Postman / server-to-server (no origin)
       if (!origin) return cb(null, true);
 
-      if (allowed && origin === allowed) return cb(null, true);
+      if (allowedOrigin && origin === allowedOrigin) return cb(null, true);
 
-      return cb(new Error(`CORS blocked for origin: ${origin}`));
+      return cb(null, false);
     },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -24,10 +23,11 @@ app.use(
 
 app.options("*", cors());
 
+app.use(express.json());
+
 app.use("/api/search", searchRouter);
 
-const port = process.env.PORT;
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+const port = Number(process.env.PORT) || 5000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
 });
